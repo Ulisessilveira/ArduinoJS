@@ -1,0 +1,17 @@
+{
+  "name": "arduinojs",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node server/index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2",
+    "serialport": "^11.0.0",
+    "socket.io": "^4.6.1"
+  }
+}
