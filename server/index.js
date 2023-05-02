@@ -29,27 +29,28 @@ const mySerial = new SerialPort({
     baudRate: 9600
 });
 
-//const parser = mySerial.pipe(new DelimiterParser({delimiter:'\n'}))
-
-//const parser = new SerialPort.parsers.Readline()
-
-//mySerial.pipe(parser)
-
-//Mandar datos al arduino
-/*parser.on('data',(line)=>{
-    console.log(li)
-    mySerial.write('a')
-})*/
-
 //Conexiones con el arduino, errores, datos impresos etc
 mySerial.on('open',function(){
     console.log('Opened Serial Port')
 });
 
 
-mySerial.on('data', function(data){
+/*mySerial.on('data', function(data){
     io.emit('pot', parseInt(data.toString()))
     console.log(parseInt(data.toString()))
+});*/
+
+let potA = 0;
+let potB = 0;
+
+mySerial.on('data', function(data){
+    let values = data.toString().split("\r\n");
+    potA = parseInt(values[0]);
+    potB = parseInt(values[1]);
+    io.emit('pot', potA);
+    io.emit('potB', potB);
+    console.log("Pot1: " + potA);
+    console.log("Pot2: " + potB);
 });
 
 mySerial.on('error', function(err){
