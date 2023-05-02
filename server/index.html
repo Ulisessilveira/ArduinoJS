@@ -12,6 +12,15 @@
         <h1>ArduinoJS</h1>
     </div>
     <div class="container">
+        <!--Botones-->
+        <div class="row m-5">
+          <div class="col text-center">
+              <button class="btn btn-outline-success" onclick="enceder()">Encender Led</button>
+          </div>
+          <div class="col text-center">
+              <button class="btn btn-outline-danger" onclick="apagar()">Apagar Led</button>
+          </div>
+        </div>
         <!--Graficas del primer potenciometro-->
         <div class="row m-2">
           <div class="col-3">
@@ -27,22 +36,10 @@
             <canvas id="myChart"></canvas>
           </div>
         </div>
-        <!--Botones-->
-        <div class="row m-5">
-            <div class="col text-center">
-                <button class="btn btn-outline-success" onclick="enceder()">Encender Led</button>
-            </div>
-            <div class="col text-center">
-                <button class="btn btn-outline-danger" onclick="apagar()">Apagar Led</button>
-            </div>
-        </div>
-        <!--Temperatura-->
-        <div class="row m-5">
-          <div class="row text-center">
-            <h3>Temperatura</h3>
-          </div>
-          <div class="col">
-            <canvas id="myChart2"></canvas>
+
+        <div class="row">
+          <div class="col-5">
+            <canvas id="myChart2" ></canvas>
           </div>
         </div>
       </div>
@@ -55,6 +52,7 @@
         const dataElement = document.getElementById('potentiometer');
         let x = 0;
         let y = 0;
+        let tem = 0;
         const xValues = [0];
         const yValues = [0];
         const ctx = document.getElementById('myChart').getContext('2d');
@@ -83,12 +81,12 @@
 
         //grafica 2
         const ctx2 = document.getElementById('myChart2').getContext('2d');
-        new Chart(ctx2, {
+        const chart2 = new Chart(ctx2, {
           type: 'bar',
           data: {
-            labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+            labels: ['Temperatura'],
             datasets: [{
-              label: '# of Votes',
+              label:'Temperatura',
               data: [12, 19, 3, 5, 2, 3],
               backgroundColor: "rgba(255,51,51,0.5)",
               borderColor: "red",
@@ -98,7 +96,8 @@
           options: {
             scales: {
               y: {
-                beginAtZero: true
+                min: 0,
+                max: 100
               }
             }
           }
@@ -115,12 +114,19 @@
           chart.data.datasets[0].data = yValues.slice(-100);
           chart.data.labels = xValues.slice(-100);
           chart.update();
+          chart2.data.datasets[0].data[0] = tem;
+          chart2.update();
+          
         }, 100);
 
         //datos del arduino y subidos a valores que necesita la pag
         socket.on('pot', (value) => {
           dataElement.textContent = value;
           y = value;
+        });
+
+        socket.on('potB', (value) => {
+          tem = value
         });
 
         function enceder(){

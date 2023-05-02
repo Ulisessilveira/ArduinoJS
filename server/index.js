@@ -49,8 +49,7 @@ mySerial.on('data', function(data){
     potB = parseInt(values[1]);
     io.emit('pot', potA);
     io.emit('potB', potB);
-    console.log("Pot1: " + potA);
-    console.log("Pot2: " + potB);
+    console.log(`Pot A: ${potA}, Temperatura: ${potB}`);
 });
 
 mySerial.on('error', function(err){
