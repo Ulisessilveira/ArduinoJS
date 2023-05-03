@@ -8,134 +8,152 @@
     <title>ArduinoJS</title>
 </head>
 <body>
-    <div class="m-3">
-        <h1>ArduinoJS</h1>
+  <nav class="navbar bg-body-tertiary">
+    <div class="container-fluid">
+      <span class="navbar-text">
+        ArduinoJS
+      </span>
     </div>
-    <div class="container">
-        <!--Botones-->
-        <div class="row m-5">
-          <div class="col text-center">
-              <button class="btn btn-outline-success" onclick="enceder()">Encender Led</button>
-          </div>
-          <div class="col text-center">
-              <button class="btn btn-outline-danger" onclick="apagar()">Apagar Led</button>
-          </div>
+  </nav>
+  <div class="container">
+      <!--Botones led-->
+      <div class="row mt-3">
+        <div class="col-2">
+          <h2>Led</h2>
         </div>
-        <!--Graficas del primer potenciometro-->
-        <div class="row m-2">
-          <div class="col-3">
-            <div class="card shadow-lg" style="width: 18rem;">
-              <img src="https://upload.wikimedia.org/wikipedia/commons/b/b5/Potentiometer.jpg" class="card-img-top" alt="potenciometro">
-              <div class="card-body text-center">
-                <h5 class="card-title">Valor del potenciometro:</h5>
-                <p id="potentiometer" class="card-text"></p>
-              </div>
-            </div>
-          </div>
-          <div class="col-9">
-            <canvas id="myChart"></canvas>
-          </div>
-        </div>
-
-        <div class="row">
-          <div class="col-5">
-            <canvas id="myChart2" ></canvas>
-          </div>
+        <div class="col-10 text-end">
+          <button class="btn btn-outline-success" onclick="enceder()">Encender</button>
+          <button class="btn btn-outline-danger" onclick="apagar()">Apagar</button>
         </div>
       </div>
-    <script src="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
-    <script src="https://cdn.socket.io/socket.io-3.0.1.min.js"></script>
-    <script src="/socket.io/socket.io.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script>
-        const socket = io()
-        const dataElement = document.getElementById('potentiometer');
-        let x = 0;
-        let y = 0;
-        let tem = 0;
-        const xValues = [0];
-        const yValues = [0];
-        const ctx = document.getElementById('myChart').getContext('2d');
-        //Diseño de la grafica 1
-        const chart = new Chart(ctx, {
-          type: 'line',
-          data: {
-            labels: xValues,
-            datasets: [{
-              label:'Potenciometro',
-              fill: false,
-              lineTension: 0,
-              backgroundColor: "rgba(40,120,116,1.0)",
-              borderColor: "rgba(40,120,116,0.1)",
-              data: yValues.slice(-100) // Mostrar solo los últimos 100 elementos
-            }]
-          },
-          options: {
-            legend: { display: false },
-            animation: { duration: 0 },
-            scales: {
-              yAxes: [{ ticks: { min: 0, max: 1023 } }],
-            }
+      <!--Graficas de potenciometro-->
+      <div class="row mt-3">
+        <div class="col-3 text-center">
+          <div class="card mt-5 shadow-lg" style="width: 18rem;">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/b/b5/Potentiometer.jpg" class="card-img-top" alt="potenciometro">
+            <div class="card-body">
+              <h5 class="card-title">Valor del potenciometro:</h5>
+              <p id="potentiometer" class="card-text"></p>
+            </div>
+          </div>
+        </div>
+        <div class="col-9">
+          <canvas id="myChart"></canvas>
+        </div>
+      </div>
+      <div class="row mt-3"></div>
+      <!--Graficas de temperatura-->
+      <div class="row mt-9">
+        <div class="col-3 text-center">
+          <div class="card mt-5 shadow-lg" style="width: 18rem;">
+            <img src="https://www.laboratorioescolar.com/productos/big/1539119681-97.jpg" class="card-img-top" alt="potenciometro">
+            <div class="card-body">
+              <h5 class="card-title">Temperatura:</h5>
+              <p id="temp" class="card-text"></p>
+            </div>
+          </div>
+        </div>
+        <div class="col-9">
+          <canvas id="myChart2" ></canvas>
+        </div>
+      </div>
+  </div>
+  <script src="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+  <script src="https://cdn.socket.io/socket.io-3.0.1.min.js"></script>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+      const socket = io()
+      const dataPot = document.getElementById('potentiometer');
+      const dataTemp = document.getElementById('temp');
+      let x = 0;
+      let y = 0;
+      let tem = 0;
+      const xValues = [0];
+      const yValues = [0];
+      const ctx = document.getElementById('myChart').getContext('2d');
+      //Diseño de la grafica 1
+      const chart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: xValues,
+          datasets: [{
+            label:'Potenciometro',
+            fill: false,
+            lineTension: 0,
+            backgroundColor: "rgba(40,120,116,1.0)",
+            borderColor: "rgba(40,120,116,0.1)",
+            data: yValues.slice(-100) // Mostrar solo los últimos 100 elementos
+          }]
+        },
+        options: {
+          legend: { display: false },
+          animation: { duration: 0 },
+          scales: {
+            yAxes: [{ ticks: { min: 0, max: 1023 } }],
           }
-        });
-
-        //grafica 2
-        const ctx2 = document.getElementById('myChart2').getContext('2d');
-        const chart2 = new Chart(ctx2, {
-          type: 'bar',
-          data: {
-            labels: ['Temperatura'],
-            datasets: [{
-              label:'Temperatura',
-              data: [12, 19, 3, 5, 2, 3],
-              backgroundColor: "rgba(255,51,51,0.5)",
-              borderColor: "red",
-              borderWidth: 1
-            }]
-          },
-          options: {
-            scales: {
-              y: {
-                min: 0,
-                max: 100
-              }
-            }
-          }
-        });
-        //Actualizacion de la grafica
-        setInterval(() => {
-          x++;
-          yValues.push(y);
-          xValues.push(x);
-          if (yValues.length > 100) {
-            yValues.shift();
-            xValues.shift();
-          }
-          chart.data.datasets[0].data = yValues.slice(-100);
-          chart.data.labels = xValues.slice(-100);
-          chart.update();
-          chart2.data.datasets[0].data[0] = tem;
-          chart2.update();
-          
-        }, 100);
-
-        //datos del arduino y subidos a valores que necesita la pag
-        socket.on('pot', (value) => {
-          dataElement.textContent = value;
-          y = value;
-        });
-
-        socket.on('potB', (value) => {
-          tem = value
-        });
-
-        function enceder(){
-          socket.emit("message",'a')
         }
-        function apagar(){
-          socket.emit("message",'b')
+      });
+
+      //grafica 2
+      const ctx2 = document.getElementById('myChart2').getContext('2d');
+      const chart2 = new Chart(ctx2, {
+        type: 'bar',
+        data: {
+          labels: ['Temperatura'],
+          datasets: [{
+            label:'Temperatura',
+            data: [12, 19, 3, 5, 2, 3],
+            backgroundColor: "rgba(255,51,51,0.5)",
+            borderColor: "red",
+            borderWidth: 1
+          }]
+        },
+        options: {
+          scales: {
+            y: {
+              min: 0,
+              max: 100
+            }
+          },
+          barThickness: 150
         }
+      });
+      //Actualizacion de la grafica
+      setInterval(() => {
+        x++;
+        yValues.push(y);
+        xValues.push(x);
+        if (yValues.length > 100) {
+          yValues.shift();
+          xValues.shift();
+        }
+        chart.data.datasets[0].data = yValues.slice(-100);
+        chart.data.labels = xValues.slice(-100);
+        chart.update();
+        chart2.data.datasets[0].data[0] = tem;
+        chart2.update();
         
-    </script>
+      }, 100);
+
+      //datos del arduino y subidos a valores que necesita la pag
+      socket.on('pot', (value) => {
+        dataPot.textContent = value;
+        y = value;
+      });
+
+      socket.on('potB', (value) => {
+        dataTemp.textContent = value;
+        tem = value
+      });
+
+      function enceder(){
+        socket.emit("message",'a')
+      }
+      function apagar(){
+        socket.emit("message",'b')
+      }
+      
+  </script>
 </body>
 </html>
