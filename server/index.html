@@ -28,7 +28,7 @@
       </div>
       <!--Graficas de potenciometro-->
       <div class="row mt-3">
-        <div class="col-3 text-center">
+        <!--div class="col-3 text-center">
           <div class="card mt-5 shadow-lg" style="width: 18rem;">
             <img src="https://upload.wikimedia.org/wikipedia/commons/b/b5/Potentiometer.jpg" class="card-img-top" alt="potenciometro">
             <div class="card-body">
@@ -36,39 +36,40 @@
               <p id="potentiometer" class="card-text"></p>
             </div>
           </div>
-        </div>
-        <div class="col-9">
+        </div-->
+        <div class="col-1"></div>
+        <div class="col-10">
           <canvas id="myChart"></canvas>
         </div>
+        <div class="col-1"></div>
       </div>
-      <div class="row mt-3"></div>
-      <!--Graficas de temperatura-->
+      <div class="row mt-5"></div>
       <div class="row mt-9">
-        <div class="col-3 text-center">
-          <div class="card mt-5 shadow-lg" style="width: 18rem;">
-            <img src="https://www.laboratorioescolar.com/productos/big/1539119681-97.jpg" class="card-img-top" alt="potenciometro">
-            <div class="card-body">
-              <h5 class="card-title">Temperatura:</h5>
-              <p id="temp" class="card-text"></p>
-            </div>
-          </div>
+        <!--Graficas de potenciometro-->
+        <div class="col-6 text-center">
+          <div id="gauge-container" style="height: 100%; width: 100%;"></div>
         </div>
-        <div class="col-9">
-          <canvas id="myChart2" ></canvas>
-        </div>
+        <!--Graficas de temperatura-->
+        <div class="col-6 text-center d-flex align-items-center justify-content-center">
+          <canvas id="myChart2" style="max-width: 100px;"></canvas>
+        </div>        
       </div>
   </div>
   <script src="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
   <script src="https://cdn.socket.io/socket.io-3.0.1.min.js"></script>
   <script src="/socket.io/socket.io.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+  <script src="https://cdn.jsdelivr.net/gh/toorshia/justgage/raphael-2.1.4.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/toorshia/justgage/justgage.js"></script>
+
+  
   <script>
       const socket = io()
-      const dataPot = document.getElementById('potentiometer');
-      const dataTemp = document.getElementById('temp');
       let x = 0;
       let y = 0;
       let tem = 0;
+      let yGauge = 0;
       const xValues = [0];
       const yValues = [0];
       const ctx = document.getElementById('myChart').getContext('2d');
@@ -102,8 +103,7 @@
         data: {
           labels: ['Temperatura'],
           datasets: [{
-            label:'Temperatura',
-            data: [12, 19, 3, 5, 2, 3],
+            label:'Temp',
             backgroundColor: "rgba(255,51,51,0.5)",
             borderColor: "red",
             borderWidth: 1
@@ -112,15 +112,32 @@
         options: {
           scales: {
             y: {
-              min: 0,
+              min: -10,
               max: 100
             }
           },
-          barThickness: 150
-        }
+        },
       });
+
+      //Grafica 3
+      // Función para actualizar el valor de la gráfica
+      function updateGaugeValue(gauge) {
+        gauge.refresh(yGauge);
+      }
+
+      var gauge = new JustGage({
+        id: "gauge-container",
+        value: xValues,
+        min: 0,
+        max: 1023,
+        title: "Potenciometro",
+        label: "Potenciometro"
+      });
+
+
       //Actualizacion de la grafica
       setInterval(() => {
+        updateGaugeValue(gauge);
         x++;
         yValues.push(y);
         xValues.push(x);
@@ -138,12 +155,14 @@
 
       //datos del arduino y subidos a valores que necesita la pag
       socket.on('pot', (value) => {
-        dataPot.textContent = value;
-        y = value;
+        yGauge = value;
       });
 
-      socket.on('potB', (value) => {
-        dataTemp.textContent = value;
+      socket.on('ultrasonico', (value) => {
+        y = value
+      });
+
+      socket.on('temp', (value) => {
         tem = value
       });
 
@@ -153,6 +172,7 @@
       function apagar(){
         socket.emit("message",'b')
       }
+
       
   </script>
 </body>

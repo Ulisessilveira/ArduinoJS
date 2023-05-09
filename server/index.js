@@ -40,16 +40,19 @@ mySerial.on('open',function(){
     console.log(parseInt(data.toString()))
 });*/
 
-let potA = 0;
-let potB = 0;
+let pot = 0;
+let ultrasonico = 0;
+let temp = 0;
 
 mySerial.on('data', function(data){
     let values = data.toString().split("\r\n");
-    potA = parseInt(values[0]);
-    potB = parseInt(values[1]);
-    io.emit('pot', potA);
-    io.emit('potB', potB);
-    console.log(`Pot A: ${potA}, Temperatura: ${potB}`);
+    pot = parseInt(values[0]);
+    ultrasonico = parseInt(values[1]);
+    temp = parseInt(values[2]);
+    io.emit('pot', pot);
+    io.emit('ultrasonico', ultrasonico);
+    io.emit('temp', temp);
+    console.log(`Pot: ${pot}, Ultrasonico: ${ultrasonico}, Temperatura: ${temp}`);
 });
 
 mySerial.on('error', function(err){
