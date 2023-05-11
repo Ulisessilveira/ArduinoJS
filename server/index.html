@@ -65,7 +65,7 @@
 
   
   <script>
-      const socket = io()
+      const socket = io()//CONCEXION CON EL BACKEND
       let x = 0;
       let y = 0;
       let tem = 0;
@@ -73,7 +73,7 @@
       const xValues = [0];
       const yValues = [0];
       const ctx = document.getElementById('myChart').getContext('2d');
-      //Diseño de la grafica 1
+      //Diseño de la grafica 1 ULTRRASONICO
       const chart = new Chart(ctx, {
         type: 'line',
         data: {
@@ -96,7 +96,7 @@
         }
       });
 
-      //grafica 2
+      //grafica 2 POTENCIOMTRO
       const ctx2 = document.getElementById('myChart2').getContext('2d');
       const chart2 = new Chart(ctx2, {
         type: 'bar',
@@ -119,7 +119,7 @@
         },
       });
 
-      //Grafica 3
+      //Grafica 3 TEMPERATURA
       // Función para actualizar el valor de la gráfica
       function updateGaugeValue(gauge) {
         gauge.refresh(yGauge);
@@ -167,7 +167,7 @@
       });
 
       function enceder(){
-        socket.emit("message",'a')
+        socket.emit("message",'a')//MANDAS LO QUE QUIERES AL BACKEND QUE A SU VES MANDA AL ARDUINO
       }
       function apagar(){
         socket.emit("message",'b')
