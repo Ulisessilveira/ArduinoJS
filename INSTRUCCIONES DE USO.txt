@@ -1,0 +1,10 @@
+NOMAS METETE EN LA CONSOLA A LA CARPETA DONDE QUIERES TRABAJAR Y ESCRIBES "npm start"
+
+EJEMPLOS
+PRACTICA #1
+    C:\Documents\Github\ArduinoJS>cd practica #1
+    C:\Documents\Github\ArduinoJS\Practica #1>npm start
+
+PRACTICA #2
+    C:\Documents\Github\ArduinoJS>cd practica #2
+    C:\Documents\Github\ArduinoJS\Practica #2>npm start
