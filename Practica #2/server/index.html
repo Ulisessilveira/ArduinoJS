@@ -59,10 +59,10 @@
       </div>
     </div>
     <div class="row">
-      <div class="col m-3">
+      <!--div class="col m-3">
         <button class="btn btn-outline-danger" onclick="menosTemp()"><i class="fa-solid fa-minus"></i></button>
         <button class="btn btn-outline-primary" onclick="masTemp()"><i class="fa-solid fa-plus"></i></button>
-      </div>
+      </div-->
     </div>
   </div>
 
@@ -93,12 +93,12 @@
 
     //Cambiar la imagenes
     function cambiarImagen() {
-      if (y > 20 && !cambiar) {
+      if (y > 54 && !cambiar) {
         cambiar = true;
         image.src = 'https://cdn.icon-icons.com/icons2/2248/PNG/512/led_off_icon_138425.png';
         image2.src = 'https://cdn.pixabay.com/photo/2017/01/31/13/22/blue-2023981_1280.png';
         imgMotor.src = 'https://usagif.com/wp-content/uploads/2022/fzk5d/fan-gif-74-minimalistic-blue-fan.gif';
-      } else if (y <= 20 && cambiar) {
+      } else if (y <= 54 && cambiar) {
         cambiar = false;
         image.src = 'https://cdn.pixabay.com/photo/2017/01/31/13/22/led-2023979_1280.png';
         image2.src = 'https://cdn.icon-icons.com/icons2/2248/PNG/512/led_off_icon_138425.png';
@@ -143,12 +143,12 @@
     options: {
       legend: { display: false },
       animation: { duration: 0 },
-      scales: {
+      /*scales: {
             y: {
               min: 0,
               max: 25
             }
-          }
+          }*/
     }
   });
   //Actualizacion de la grafica
